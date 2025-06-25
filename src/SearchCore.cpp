@@ -15,6 +15,19 @@
 #endif
 
 
+
+
+
+
+std::string getCurrentTimestamp() {
+    std::time_t now = std::time(nullptr);
+    std::tm* local = std::localtime(&now);
+    char buffer[20];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", local);
+    return std::string(buffer);
+}
+
+
 SearchCore::SearchCore() {}
 
 void SearchCore::loadFiles(const std::string& fileListPath) {
@@ -82,7 +95,8 @@ void SearchCore::search(const std::string& query) {
 
     std::cout << "\033[36m[Searching]\033[0m '" << query << "'\n";
     std::ofstream logFile("output/output.txt", std::ios::app);
-    logFile << "[Search] " << query << "\n";
+    logFile << "[" << getCurrentTimestamp() << "] [Search] " << query << "\n";
+
 
     auto it = wordIndex.find(cleaned);
     if (it == wordIndex.end()) {
@@ -121,7 +135,8 @@ void SearchCore::multiSearch(const std::string& queryLine) {
         return;
     }
 
-    logFile << "[Search] ";
+    logFile << "[" << getCurrentTimestamp() << "] [Search] \n";
+
     for (const std::string& w : searchWords) logFile << w << " ";
     logFile << "\n";
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "../include/SearchCore.h"
+#include <fstream>
 
 int main(int argc, char* argv[]) {
     // --- Handle Command-Line Arguments First ---
@@ -41,6 +42,22 @@ int main(int argc, char* argv[]) {
         std::cout << "\n\033[36m[->] Enter word(s) to search (or type 'q' to quit):\033[0m ";
         std::getline(std::cin, input);
         if (input == "q" || input == "Q") break;
+        if (input == "/history") {
+            std::ifstream log("output/output.txt");
+        if (!log.is_open()) {
+            std::cout << "\033[31m[✘] No history found.\033[0m\n";
+        }   else {
+            std::cout << "\033[36m[History Log:]\033[0m\n";
+            std::string line;
+            while (std::getline(log, line)) {
+                std::cout << line << "\n";
+                }
+            }
+            continue;
+        }
+
+if (input == "/quit") break;
+
         engine.multiSearch(input);
     }
     std::cout << "\033[36m[Exit]\033[0m Goodbye!\n";
