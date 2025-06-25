@@ -1,0 +1,38 @@
+[Search] 	Hello
+  |=> data/file2.txt (2 occurrences)
+  |=> data/file1.txt (1 occurrences)
+
+[Search] hi
+  |=> Not found in any file
+
+[Search] Worlddd
+  |=> Not found in any file
+
+[Search] World
+  |=> data/file1.txt (1 occurrences)
+
+[Search] Worry
+  |=> Not found in any file
+
+[Search] Divyansh
+  |=> Not found in any file
+
+[Search] sample
+  |=> data/file1.txt (1 occurrences)
+
+[Search] qui
+  |=> Not found in any file
+
+[Search] des
+  |=> Not found in any file
+
+[Search] hello world 
+  |=> data/file1.txt
+
+[Search] hello world
+  |=> Not found in any file
+
+[Search] hello 
+  |=> data/file2.txt (2 occurrences)
+  |=> data/file1.txt (1 occurrences)
+

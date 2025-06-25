@@ -11,6 +11,7 @@ public:
     void loadFiles(const std::string& fileListPath);
     void buildIndex();
     void search(const std::string& query);
+    void multiSearch(const std::string& queryLine);
 
 private:
     std::vector<std::string> docList;  // List of .txt files

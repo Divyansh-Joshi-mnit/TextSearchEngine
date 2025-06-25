@@ -84,6 +84,72 @@ void SearchCore::search(const std:: string& query){
     logFile << "\n";
 }
 
+void SearchCore::multiSearch(const std:: string&queryLine){
+    std::istringstream ss(queryLine);
+    std::string token;
+    std::set<int> matchingDocs;
+    std::ofstream logFile("output/output.txt", std::ios::app);
+
+    std::vector<std::string> searchWords;
+
+    while (ss >> token) {
+        std::string cleaned = sanitizeToken(token);
+        std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), ::tolower);
+        if (!cleaned.empty()) {
+            searchWords.push_back(cleaned);
+        }
+    }
+
+    if (searchWords.empty()) {
+        std::cout << "[!] No valid search terms provided.\n";
+        logFile << "[Search] (invalid empty input)\n\n";
+        return;
+    }
+
+    logFile << "[Search] ";
+    for (const std::string& w : searchWords) logFile << w << " ";
+    logFile << "\n";
+
+    // Build document intersection
+    std::set<int> resultSet;
+    bool firstWord = true;
+
+    for (const std::string& word : searchWords) {
+        auto it = wordIndex.find(word);
+        std::set<int> wordDocs;
+        if (it != wordIndex.end()) {
+            for (const auto& [docID, freq] : it->second) {
+                wordDocs.insert(docID);
+            }
+        }
+
+        if (firstWord) {
+            resultSet = wordDocs;
+            firstWord = false;
+        } else {
+            std::set<int> temp;
+            std::set_intersection(resultSet.begin(), resultSet.end(),
+                                  wordDocs.begin(), wordDocs.end(),
+                                  std::inserter(temp, temp.begin()));
+            resultSet = temp;
+        }
+    }
+
+    if (resultSet.empty()) {
+        std::cout << "[FAIL] No files matched all search terms.\n";
+        logFile << "  |=> Not found in any file\n\n";
+    } else {
+        std::cout << "[OK] Found in:\n";
+        for (int docID : resultSet) {
+            std::cout << "  |=> " << getFileName(docID) << "\n";
+            logFile << "  |=> " << getFileName(docID) << "\n";
+        }
+        logFile << "\n";
+    }
+}
+
+
+
 std:: string SearchCore::getFileName(int docID){
     if(docID>=0 && docID < docList.size()){
         return docList[docID];
