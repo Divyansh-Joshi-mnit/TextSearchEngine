@@ -36,3 +36,30 @@
   |=> data/file2.txt (2 occurrences)
   |=> data/file1.txt (1 occurrences)
 
+[Search] hello 
+  |=> data/file1.txt
+  |=> data/file2.txt
+
+[Search] hello world 
+  |=> data/file1.txt
+
+[Search] hello 
+  |=> data/file1.txt
+  |=> data/file2.txt
+
+[Search] divyansh 
+  |=> Not found in any file
+
+[Search] hello world 
+  ↪ data/file1.txt (2 total occurrences)
+
+[Search] hii 
+  |=> Not found in any file
+
+[Search] hii 
+  ↪ Not found in any file
+
+[Search] hello 
+  ↪ data/file1.txt (1 total occurrences)
+  ↪ data/file2.txt (2 total occurrences)
+

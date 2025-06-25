@@ -1,81 +1,80 @@
 #include "../include/SearchCore.h"
-#include<fstream>
-#include<sstream>
-#include<iostream>
-#include<algorithm>
-#include<cctype>
-#include<filesystem>
-
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
-SearchCore::SearchCore(){}
+SearchCore::SearchCore() {}
 
-void SearchCore::loadFiles(const std::string& fileListPath){
+void SearchCore::loadFiles(const std::string& fileListPath) {
     std::ifstream infile(fileListPath);
     std::string path;
-    while(std::getline(infile,path)){
-        if(!path.empty()){
+    while (std::getline(infile, path)) {
+        if (!path.empty()) {
             docList.push_back(path);
         }
     }
 }
 
-void SearchCore::buildIndex(){
-    for(int i=0;i<docList.size();++i){
-        std::cout<<"[Indexing]"<< docList[i]<<std::endl;
-        indexDocument(docList[i],i);
+void SearchCore::buildIndex() {
+    for (int i = 0; i < docList.size(); ++i) {
+        std::cout << "\033[34m[Indexing]\033[0m " << docList[i] << std::endl;
+        indexDocument(docList[i], i);
     }
-    std::cout<<"[Done] Indexing complete.\n";
+    std::cout << "\033[36m[Done]\033[0m Indexing complete.\n";
 }
 
-
-void SearchCore::indexDocument(const std::string& filePath, int docID){
+void SearchCore::indexDocument(const std::string& filePath, int docID) {
     std::ifstream file(filePath);
-    std:: string line;
-    while(std::getline(file,line)){
-        std:: stringstream ss(line);
-        std:: string word;
-        while(ss>>word){
-            std:: string cleaned = sanitizeToken(word);
-
-            if(!cleaned.empty()){
-                std:: transform(cleaned.begin(),cleaned.end(),cleaned.begin(),::tolower);
+    std::string line;
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string word;
+        while (ss >> word) {
+            std::string cleaned = sanitizeToken(word);
+            if (!cleaned.empty()) {
+                std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), ::tolower);
                 wordIndex[cleaned][docID]++;
             }
         }
     }
 }
 
-std::string SearchCore:: sanitizeToken(const std::string& token){
+std::string SearchCore::sanitizeToken(const std::string& token) {
     std::string result;
-    for(char c: token){
-        if(std:: isalpha(static_cast<unsigned char>(c))){
-            result+=c;
+    for (char c : token) {
+        if (std::isalpha(static_cast<unsigned char>(c))) {
+            result += c;
         }
     }
     return result;
 }
 
-void SearchCore::search(const std:: string& query){
-    std:: string cleaned = sanitizeToken(query);
-    std:transform(cleaned.begin(),cleaned.end(),cleaned.begin(),::tolower);
-    if(cleaned.empty()){
-        std::cout<<"[!] Invalid input.\n";
+void SearchCore::search(const std::string& query) {
+    std::string cleaned = sanitizeToken(query);
+    std::transform(cleaned.begin(), cleaned.end(), cleaned.begin(), ::tolower);
+
+    if (cleaned.empty()) {
+        std::cout << "\033[33m[!] Invalid input.\033[0m\n";
         return;
     }
-    std::cout << "[Searching] '" << query << "'\n";
+
+    std::cout << "\033[36m[Searching]\033[0m '" << query << "'\n";
     std::ofstream logFile("output/output.txt", std::ios::app);
     logFile << "[Search] " << query << "\n";
 
     auto it = wordIndex.find(cleaned);
     if (it == wordIndex.end()) {
-        std::cout << "[ FAIL ] No results found for '" << query << "'\n";
+        std::cout << "\033[31m[ FAIL ]\033[0m No results found for '" << query << "'\n";
         logFile << "  |=> Not found in any file\n\n";
         return;
     }
 
-    std::cout << "[ OK ] Results for '" << query << "':\n";
+    std::cout << "\033[32m[ OK ]\033[0m Results for '" << query << "':\n";
     for (const auto& [docID, count] : it->second) {
         std::string fileName = getFileName(docID);
         std::cout << "  |=> " << fileName << " (" << count << " occurrences)\n";
@@ -84,12 +83,11 @@ void SearchCore::search(const std:: string& query){
     logFile << "\n";
 }
 
-void SearchCore::multiSearch(const std:: string&queryLine){
+void SearchCore::multiSearch(const std::string& queryLine) {
     std::istringstream ss(queryLine);
     std::string token;
     std::set<int> matchingDocs;
     std::ofstream logFile("output/output.txt", std::ios::app);
-
     std::vector<std::string> searchWords;
 
     while (ss >> token) {
@@ -101,7 +99,7 @@ void SearchCore::multiSearch(const std:: string&queryLine){
     }
 
     if (searchWords.empty()) {
-        std::cout << "[!] No valid search terms provided.\n";
+        std::cout << "\033[33m[!] No valid search terms provided.\033[0m\n";
         logFile << "[Search] (invalid empty input)\n\n";
         return;
     }
@@ -110,7 +108,6 @@ void SearchCore::multiSearch(const std:: string&queryLine){
     for (const std::string& w : searchWords) logFile << w << " ";
     logFile << "\n";
 
-    // Build document intersection
     std::set<int> resultSet;
     bool firstWord = true;
 
@@ -136,22 +133,26 @@ void SearchCore::multiSearch(const std:: string&queryLine){
     }
 
     if (resultSet.empty()) {
-        std::cout << "[FAIL] No files matched all search terms.\n";
-        logFile << "  |=> Not found in any file\n\n";
+        std::cout << "\033[31m[✘] No files matched all search terms.\033[0m\n";
+        logFile << "  ↪ Not found in any file\n\n";
     } else {
-        std::cout << "[OK] Found in:\n";
+        std::cout << "\033[32m[✔] Found in:\033[0m\n";
         for (int docID : resultSet) {
-            std::cout << "  |=> " << getFileName(docID) << "\n";
-            logFile << "  |=> " << getFileName(docID) << "\n";
+            int totalCount = 0;
+            for (const std::string& word : searchWords) {
+                totalCount += wordIndex[word][docID];
+            }
+
+            std::string fileName = getFileName(docID);
+            std::cout << "  ↪ " << fileName << " (" << totalCount << " total occurrences)\n";
+            logFile << "  ↪ " << fileName << " (" << totalCount << " total occurrences)\n";
         }
         logFile << "\n";
     }
 }
 
-
-
-std:: string SearchCore::getFileName(int docID){
-    if(docID>=0 && docID < docList.size()){
+std::string SearchCore::getFileName(int docID) {
+    if (docID >= 0 && docID < docList.size()) {
         return docList[docID];
     }
     return "[Unknown File] !";
