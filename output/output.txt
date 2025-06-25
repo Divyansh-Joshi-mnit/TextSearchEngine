@@ -63,3 +63,9 @@
   ↪ data/file1.txt (1 total occurrences)
   ↪ data/file2.txt (2 total occurrences)
 
+[Search] elit aenean 
+  ↪ data/file3.txt (6 total occurrences)
+
+[Search] dikku_joshi 
+  ↪ data/file3.txt (1 total occurrences)
+
