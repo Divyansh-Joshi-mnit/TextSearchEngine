@@ -1,4 +1,4 @@
-```markdown
+
 # 🧠 TextSearchEngine
 
 A cross-platform, high-performance command-line search engine written in modern **C++**. Designed for blazing-fast text file searches with clean logging, ANSI-styled output, interactive mode, and command-based UX.
@@ -17,7 +17,6 @@ Perfect for developers, students, or nerds who hate slow `Ctrl+F`.
 - ✅ Timestamps for every search
 - ✅ Reset, clear, and version commands
 - ✅ Cross-platform build via **CMake**
-
 ---
 
 ## 📂 Folder Structure
@@ -81,7 +80,7 @@ cmake --build .
 ./build/TextSearchEngine
 ```
 
-Then type:
+Then type:(Just an example)
 
 ```
 > hello world
@@ -162,13 +161,10 @@ And ship it to friends or demo it — no build required.
 
 ## 📜 License
 
-MIT — Use it, break it, improve it.
+ Use it, break it, improve it.
 
 ---
 
 ## 👨‍💻 Built by Divyansh Joshi
 
 Student | C++ Enthusiast |
-
-```
-```
