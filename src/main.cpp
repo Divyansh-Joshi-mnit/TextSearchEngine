@@ -2,7 +2,8 @@
 #include <sstream>
 #include "../include/SearchCore.h"
 #include <fstream>
-
+#define APP_VERSION "1.0.0"
+#define APP_NAME "TextSearchEngine"
 int main(int argc, char* argv[]) {
     // --- Handle Command-Line Arguments First ---
     if (argc > 1) {
@@ -10,9 +11,17 @@ int main(int argc, char* argv[]) {
         if (arg == "--help") {
             std::cout << "\033[36mUsage: TextSearchEngine [options]\033[0m\n\n";
             std::cout << "Options:\n";
-            std::cout << "  \033[33m--help\033[0m                 Show this help message\n";
-            std::cout << "  \033[33mword1 word2 ...\033[0m        Search words directly from CLI\n";
-            std::cout << "  \033[33m(no arguments)\033[0m         Start interactive search mode\n";
+            std::cout << "  \033[33m--help\033[0m           Show this help message\n";
+            std::cout << "  \033[33mword1 word2 ...\033[0m  Search words directly from CLI\n";
+            std::cout << "  \033[33m(no arguments)\033[0m     Start interactive search mode\n\n";
+
+            std::cout << "Interactive Commands:\n";
+            std::cout << "  \033[33m/history\033[0m         Show previous searches\n";
+            std::cout << "  \033[33m/clear\033[0m           Clear log file\n";
+            std::cout << "  \033[33m/reset\033[0m           Rebuild index from fileList\n";
+            std::cout << "  \033[33m/version\033[0m         Show version info\n";
+            std::cout << "  \033[33m/quit\033[0m            Exit the program\n";
+
             return 0;
         }
     }
@@ -56,7 +65,29 @@ int main(int argc, char* argv[]) {
             continue;
         }
 
-if (input == "/quit") break;
+        if (input == "/version") {
+        std::cout << "\033[36m[TextSearchEngine v" << APP_VERSION << "]\033[0m Built with C++17\n";
+        continue;
+       }
+       if (input == "/clear") {
+            std::ofstream clearFile("output/output.txt", std::ios::trunc);
+            std::cout << "\033[33m[!] Log file cleared.\033[0m\n";
+            continue;
+        }
+        if (input == "/reset") {
+        std::ofstream clearFile("output/output.txt", std::ios::trunc);
+        std::cout << "\033[33m[!] Log file cleared. Rebuilding index...\033[0m\n";
+        engine = SearchCore();  // Reset engine
+        engine.loadFiles("data/fileList.txt");
+        engine.buildIndex();
+        continue;
+         } 
+        if (input.empty()) {
+            std::cout << "\033[33m[!] Empty input. Please enter a search term.\033[0m\n";
+            continue;
+        }
+
+    if (input == "/quit") break;
 
         engine.multiSearch(input);
     }
