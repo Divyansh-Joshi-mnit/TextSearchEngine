@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
         cout<<"\n[->] Enter a word to search (or type 'q' to quit): ";
         getline(cin,input);
         if(input == "q" || input == "Q") break;
-        engine.search(input);
+        engine.multiSearch(input);
     }
     cout<<"Goodbye!\n";
     return 0;
