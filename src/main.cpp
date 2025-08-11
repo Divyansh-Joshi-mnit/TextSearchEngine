@@ -5,7 +5,6 @@
 #define APP_VERSION "1.0.0"
 #define APP_NAME "TextSearchEngine"
 int main(int argc, char* argv[]) {
-    // --- Handle Command-Line Arguments First ---
     if (argc > 1) {
         std::string arg = argv[1];
         if (arg == "--help") {
@@ -26,13 +25,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // --- Initialize search engine ---
     SearchCore engine;
     std::string listFile = "data/fileList.txt";
     engine.loadFiles(listFile);
     engine.buildIndex();
-
-    // --- CLI argument-based search ---
     if (argc > 1) {
         std::ostringstream combined;
         for (int i = 1; i < argc; ++i) {
@@ -44,8 +40,6 @@ int main(int argc, char* argv[]) {
         engine.multiSearch(combinedSearch);
         return 0;
     }
-
-    // --- Interactive search mode ---
     std::string input;
     while (true) {
         std::cout << "\n\033[36m[->] Enter word(s) to search (or type 'q' to quit):\033[0m ";
@@ -77,7 +71,7 @@ int main(int argc, char* argv[]) {
         if (input == "/reset") {
         std::ofstream clearFile("output/output.txt", std::ios::trunc);
         std::cout << "\033[33m[!] Log file cleared. Rebuilding index...\033[0m\n";
-        engine = SearchCore();  // Reset engine
+        engine = SearchCore(); 
         engine.loadFiles("data/fileList.txt");
         engine.buildIndex();
         continue;
