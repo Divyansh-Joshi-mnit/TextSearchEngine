@@ -1,7 +1,7 @@
 
 # 🧠 TextSearchEngine
 
-A cross-platform, high-performance command-line search engine written in modern **C++**. Designed for blazing-fast text file searches with clean logging, ANSI-styled output, interactive mode, and command-based UX.
+A  command-line search engine written in modern **C++**. Designed for blazing-fast text file searches with clean logging, output and interactive mode.
 
 Perfect for developers, students, or nerds who hate slow `Ctrl+F`.
 
@@ -11,12 +11,10 @@ Perfect for developers, students, or nerds who hate slow `Ctrl+F`.
 
 - ✅ Single-word & multi-word search
 - ✅ Interactive CLI with `/` commands
-- ✅ ANSI-colored output for better UX
 - ✅ Logs all searches to `output/output.txt`
 - ✅ Search history viewer
 - ✅ Timestamps for every search
 - ✅ Reset, clear, and version commands
-- ✅ Cross-platform build via **CMake**
 ---
 
 ## 📂 Folder Structure
@@ -44,10 +42,7 @@ TextSearchEngine/
 
 ## 🛠️ Build Instructions
 
-### 🖥️ Prerequisites:
-- CMake >= 3.10
-- C++17 compatible compiler
-  - GCC >= 9, Clang >= 7, MSVC >= 2017
+
 
 ### 🧪 Build (All Platforms)
 ```bash
