@@ -4,7 +4,6 @@
 #include <vector>
 #include <unordered_map>
 #include <set>
-
 class SearchCore {
 public:
     SearchCore();
@@ -15,7 +14,7 @@ public:
 
 private:
     std::vector<std::string> docList;  // List of .txt files
-    std::unordered_map<std::string, std::unordered_map<int, int>> wordIndex; // word -> {docID -> frequency}
+    std::unordered_map<std::string, std::unordered_map<int, int>> wordIndex; 
     
     std::string sanitizeToken(const std::string& token);
     void indexDocument(const std::string& filePath, int docID);
