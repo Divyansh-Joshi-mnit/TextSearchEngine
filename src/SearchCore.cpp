@@ -58,14 +58,13 @@ void SearchCore::indexDocument(const std::string& filePath, int docID) {
 
 std::string SearchCore::sanitizeToken(const std::string& token) {
     std::string result;
-    for (size_t i = 0; i < token.size(); ++i) {
+    for (int i = 0; i < token.size(); ++i) {
         char c = token[i];
 
         if (std::isalnum(static_cast<unsigned char>(c))) {
             result += c;
         }
         else if (c == '-' || c == '_' || c == '+' || c == '.') {
-            // Allow hyphen/underscore/plus/period if surrounded by alphanum
             if (i > 0 && i < token.size() - 1 &&
                 std::isalnum(static_cast<unsigned char>(token[i - 1])) &&
                 std::isalnum(static_cast<unsigned char>(token[i + 1]))) {
@@ -109,7 +108,6 @@ void SearchCore::search(const std::string& query) {
 void SearchCore::multiSearch(const std::string& queryLine) {
     std::istringstream ss(queryLine);
     std::string token;
-    std::set<int> matchingDocs;
     std::ofstream logFile("output/output.txt", std::ios::app);
     std::vector<std::string> searchWords;
 
